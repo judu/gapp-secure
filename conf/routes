@@ -1,0 +1,9 @@
+# import these default routes as :
+# *         /               module:secure
+# ~~~~
+
+
+GET       /login                                        Secure.login
+POST      /login                                        Secure.authenticate
+GET       /finish_auth/{id}                             Secure.finishAuth
+GET       /logout                                       Secure.logout
