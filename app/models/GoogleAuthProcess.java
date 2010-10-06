@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package models;
 
 import java.io.Serializable;
@@ -25,9 +21,7 @@ public class GoogleAuthProcess implements Serializable {
     public Association association;
     public Authentication auth;
 
-    public GoogleAuthProcess() {
-    }
-
+    public GoogleAuthProcess() {}
 
     public static Long nextID () {
         return authID++;
@@ -35,25 +29,17 @@ public class GoogleAuthProcess implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if (obj == null || ! (obj instanceof GoogleAuthProcess))
             return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
         final GoogleAuthProcess other = (GoogleAuthProcess) obj;
-        if (this.manager != other.manager && (this.manager == null || !this.manager.equals(other.manager))) {
+        if (this.manager != other.manager && (this.manager == null || !this.manager.equals(other.manager)))
             return false;
-        }
-        if (this.endPoint != other.endPoint && (this.endPoint == null || !this.endPoint.equals(other.endPoint))) {
+        if (this.endPoint != other.endPoint && (this.endPoint == null || !this.endPoint.equals(other.endPoint)))
             return false;
-        }
-        if (this.association != other.association && (this.association == null || !this.association.equals(other.association))) {
+        if (this.association != other.association && (this.association == null || !this.association.equals(other.association)))
             return false;
-        }
-        if (this.auth != other.auth && (this.auth == null || !this.auth.equals(other.auth))) {
+        if (this.auth != other.auth && (this.auth == null || !this.auth.equals(other.auth)))
             return false;
-        }
         return true;
     }
 

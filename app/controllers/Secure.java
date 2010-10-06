@@ -1,40 +1,32 @@
 package controllers;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URLDecoder;
-import java.security.Principal;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import models.GoogleAuthProcess;
 import org.expressme.openid.Association;
 import org.expressme.openid.Authentication;
-import org.expressme.openid.Base64;
 import org.expressme.openid.Endpoint;
 import org.expressme.openid.OpenIdManager;
 import play.Play;
 import play.cache.Cache;
-import play.mvc.*;
-import play.data.validation.*;
-import play.libs.*;
-import play.utils.*;
+import play.data.validation.Required;
+import play.data.validation.Validation;
+import play.libs.Crypto;
+import play.mvc.Before;
+import play.mvc.Controller;
+import play.mvc.Http;
+import play.mvc.Router;
+import play.utils.Java;
 
 public class Secure extends Controller {
 
@@ -210,7 +202,7 @@ public class Secure extends Controller {
 
     public static void logout() throws Throwable {
         session.clear();
-        response.setCookie("rememberme", "", 0);
+        response.removeCookie("rememberme");
         Security.invoke("onDisconnected");
         flash.success("secure.logout");
         login();
