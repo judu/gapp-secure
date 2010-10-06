@@ -9,14 +9,13 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import models.GoogleAuthProcess;
 import org.expressme.openid.Association;
 import org.expressme.openid.Authentication;
 import org.expressme.openid.Endpoint;
 import org.expressme.openid.OpenIdManager;
+import play.Logger;
 import play.Play;
 import play.cache.Cache;
 import play.data.validation.Required;
@@ -75,7 +74,6 @@ public class Secure extends Controller {
         // If user set the withgoogle to true, we just need to redirect.
         if (Play.configuration.getProperty("auth.withgoogle", "false").equals("true")) {
             String domain = Play.configuration.getProperty("auth.googledomain", request.domain);
-//            System.out.println(domain);
 
             askGoogle(domain);
             return;
@@ -108,27 +106,22 @@ public class Secure extends Controller {
         Cache.add(finishID, process, "10min");
 
         flash.keep("url");
-        System.out.println("Redirecting to : "+authUrl);
-        System.out.println("-------------");
         redirect(authUrl);
 
 
     }
 
     public static void finishAuth(String id) {
-        System.out.println("Finish authentication");
 
         try {
-            System.out.println("Get process with ID " + id);
             GoogleAuthProcess process = (GoogleAuthProcess) Cache.get(id);
             if (process == null) {
-                System.out.println("No process");
+               Logger.error("No Google Authentication process");
                 return;
             }
             OpenIdManager manager = process.manager;
             Authentication auth = manager.getAuthentication(createRequest(request.url), process.association.getRawMacKey(), "ext1");
 
-            System.out.println(auth.getFullname());
             session.put("username", auth.getIdentity());
             session.put("fullName", auth.getFullname());
             session.put("firstName", auth.getFirstname());
@@ -137,7 +130,7 @@ public class Secure extends Controller {
             session.put("email", auth.getEmail());
             redirectToOriginalURL();
         } catch (Throwable ex) {
-            Logger.getLogger(Secure.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.error(ex.getMessage());
         }
 
 
